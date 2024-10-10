@@ -11,6 +11,8 @@ import { JwtAuthGuard } from './Guards/jwt-auth.guard';
 import { AuthModule } from './Modules/auth.module';
 import { UserModule } from './Modules/user.module';
 import { CloudWatchService } from './Services/cloudwatch.service';
+import { EmailerService } from './Services/emailer.service';
+import { Alea } from './Domain/alea.model';
 
 @Module({
   imports: [
@@ -25,7 +27,7 @@ import { CloudWatchService } from './Services/cloudwatch.service';
       username: process.env.DISASTREAM_DB_USER,
       password: process.env.DISASTREAM_DB_PASSWORD,
       database: process.env.DISASTREAM_DB_NAME,
-      entities: [User],
+      entities: [User, Alea],
       synchronize: true,
       schema: 'public',
     }),
@@ -42,6 +44,7 @@ import { CloudWatchService } from './Services/cloudwatch.service';
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
+    EmailerService,
   ],
 })
 export class AppModule implements OnModuleInit {
@@ -49,6 +52,6 @@ export class AppModule implements OnModuleInit {
 
   onModuleInit() {
     // Listen to my SQS queue for real-time notifications
-    // this.sqsListenerService.pollMessagesFromSQS();
+    this.sqsListenerService.pollMessagesFromSQS();
   }
 }

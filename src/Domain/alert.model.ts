@@ -19,6 +19,8 @@ export class Alert {
   user: User;
   @Column({ type: 'geometrycollection' })
   areas: Geometry[];
+  @Column()
+  aleas: string[];
   @CreateDateColumn({
     type: 'timestamp without time zone',
     nullable: true,
