@@ -17,7 +17,7 @@ export class Alert {
   @ManyToOne((type) => User, (user) => user.id)
   @JoinColumn({ name: 'user' })
   user: User;
-  @Column({ type: 'geometrycollection' })
+  @Column({ type: 'geometrycollection', nullable: true })
   areas: Geometry[];
   @Column()
   aleas: string[];
