@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Category } from './category.model';
 
 @Entity({ name: 'aleas' })
 export class Alea {
@@ -6,10 +13,7 @@ export class Alea {
   id: number;
   @Column()
   name: string;
-  @Column()
-  legend: string;
-  @Column({ default: true })
-  disponible: boolean;
-  @Column({ type: 'json' })
-  keywords: string[];
+  @ManyToOne((type) => Category, (category) => category.id)
+  @JoinColumn({ name: 'category' })
+  category: Category;
 }

@@ -13,6 +13,8 @@ import { UserModule } from './Modules/user.module';
 import { CloudWatchService } from './Services/cloudwatch.service';
 import { EmailerService } from './Services/emailer.service';
 import { Alea } from './Domain/alea.model';
+import { Category } from './Domain/category.model';
+import { AleaModule } from './Modules/alea.module';
 
 @Module({
   imports: [
@@ -27,12 +29,14 @@ import { Alea } from './Domain/alea.model';
       username: process.env.DISASTREAM_DB_USER,
       password: process.env.DISASTREAM_DB_PASSWORD,
       database: process.env.DISASTREAM_DB_NAME,
-      entities: [User, Alea],
+      entities: [User, Alea, Category],
       synchronize: true,
       schema: 'public',
+      logging: 'all',
     }),
     UserModule,
     AuthModule,
+    AleaModule,
   ],
   controllers: [AppController],
   providers: [
