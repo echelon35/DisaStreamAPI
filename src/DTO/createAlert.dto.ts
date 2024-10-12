@@ -1,8 +1,8 @@
-import { Geometry } from 'geojson';
 import { User } from 'src/Domain/user.model';
+import { Geometry } from 'typeorm';
 
 export class CreateAlertDto {
-  areas: Geometry[];
+  areas: Geometry;
   name: string;
   user: User;
 }

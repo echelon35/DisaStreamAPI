@@ -4,23 +4,32 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from './user.model';
+import { Alea } from './alea.model';
+import { ReportType } from './reportType.model';
 import { Geometry } from 'geojson';
 
 @Entity({ name: 'alerts' })
 export class Alert {
   @PrimaryGeneratedColumn()
   id: number;
-  @ManyToOne((type) => User, (user) => user.id)
+  @ManyToOne(() => User, (user) => user.id)
   @JoinColumn({ name: 'user' })
   user: User;
-  @Column({ type: 'geometrycollection', nullable: true })
-  areas: Geometry[];
-  @Column()
+  @Column({ type: 'geometry', nullable: true })
+  areas: Geometry;
+  @OneToMany(() => Alea, (alea) => alea.id)
+  @JoinColumn({ name: 'aleas' })
   aleas: string[];
+  @Column({ type: 'json' })
+  criterias: JSON;
+  @OneToMany(() => ReportType, (reportType) => reportType.id)
+  @JoinColumn({ name: 'reportTypes' })
+  reportTypes: ReportType;
   @CreateDateColumn({
     type: 'timestamp without time zone',
     nullable: true,

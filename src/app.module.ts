@@ -15,6 +15,10 @@ import { EmailerService } from './Services/emailer.service';
 import { Alea } from './Domain/alea.model';
 import { Category } from './Domain/category.model';
 import { AleaModule } from './Modules/alea.module';
+import { AlertModule } from './Modules/alert.module';
+import { Alert } from './Domain/alert.model';
+import { ReportType } from './Domain/reportType.model';
+import { MailAlert } from './Domain/mailAlert.model';
 
 @Module({
   imports: [
@@ -29,7 +33,7 @@ import { AleaModule } from './Modules/alea.module';
       username: process.env.DISASTREAM_DB_USER,
       password: process.env.DISASTREAM_DB_PASSWORD,
       database: process.env.DISASTREAM_DB_NAME,
-      entities: [User, Alea, Category],
+      entities: [User, Alea, Category, Alert, ReportType, MailAlert],
       synchronize: true,
       schema: 'public',
       logging: 'all',
@@ -37,6 +41,7 @@ import { AleaModule } from './Modules/alea.module';
     UserModule,
     AuthModule,
     AleaModule,
+    AlertModule,
   ],
   controllers: [AppController],
   providers: [
