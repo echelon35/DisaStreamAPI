@@ -4,4 +4,6 @@ export interface IGoogleLogin {
   lastname: string;
   username: string;
   accessToken: string;
+  providerId: string;
+  provider: 'GOOGLE';
 }

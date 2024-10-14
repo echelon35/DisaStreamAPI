@@ -6,14 +6,16 @@ import { Repository } from 'typeorm';
 @Injectable()
 export class AleaService {
   constructor(
-    @InjectRepository(Alea) private readonly aleaRepository: Repository<Alea>,
+    @InjectRepository(Alea)
+    private readonly aleaRepository: Repository<Alea>,
   ) {}
 
-  async FindAllWithCategories() {
+  async FindAllByCategories() {
     const aleas = await this.aleaRepository
       .createQueryBuilder('alea')
       .leftJoinAndSelect('alea.category', 'category')
       .select(['alea.name', 'category.name'])
+      // .groupBy('category')
       .execute();
 
     return aleas;

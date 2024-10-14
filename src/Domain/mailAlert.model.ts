@@ -17,5 +17,7 @@ export class MailAlert {
   @JoinColumn({ name: 'user' })
   user: User;
   @Column()
+  userId: number;
+  @Column({ default: false })
   isVerified: boolean;
 }

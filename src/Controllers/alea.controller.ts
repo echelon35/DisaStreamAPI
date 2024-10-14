@@ -10,6 +10,6 @@ export class AleaController {
   @Get('/')
   @Public()
   async findAll(): Promise<Alea[]> {
-    return await this.aleaService.FindAllWithCategories();
+    return await this.aleaService.FindAllByCategories();
   }
 }

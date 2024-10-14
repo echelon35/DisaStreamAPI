@@ -9,8 +9,6 @@ export class User {
   @Column({ unique: true })
   mail: string;
   @Column({ nullable: true })
-  token: string;
-  @Column({ nullable: true })
   password: string;
   @Column({ type: 'timestamp without time zone', default: new Date() })
   last_connexion: Date;
@@ -18,4 +16,8 @@ export class User {
   firstname: string;
   @Column({ nullable: true })
   lastname: string;
+  @Column()
+  provider: string;
+  @Column()
+  providerId: string;
 }
