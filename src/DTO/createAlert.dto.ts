@@ -1,8 +1,8 @@
-import { User } from 'src/Domain/user.model';
-import { Geometry } from 'typeorm';
+import { Geometry } from 'geojson';
+import { Alea } from 'src/Domain/alea.model';
 
 export class CreateAlertDto {
   areas: Geometry;
   name: string;
-  user: User;
+  aleas: Alea[];
 }

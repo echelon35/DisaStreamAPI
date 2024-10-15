@@ -2,7 +2,10 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -13,19 +16,23 @@ import { Alea } from './alea.model';
 import { ReportType } from './reportType.model';
 import { Geometry } from 'geojson';
 
+@Index(['name', 'userId'], { unique: true })
 @Entity({ name: 'alerts' })
 export class Alert {
   @PrimaryGeneratedColumn()
   id: number;
   @ManyToOne(() => User, (user) => user.id)
-  @JoinColumn({ name: 'user' })
   user: User;
+  @Column()
+  userId: number;
+  @Column()
+  name: string;
   @Column({ type: 'geometry', nullable: true })
   areas: Geometry;
-  @OneToMany(() => Alea, (alea) => alea.id)
-  @JoinColumn({ name: 'aleas' })
-  aleas: string[];
-  @Column({ type: 'json' })
+  @ManyToMany(() => Alea)
+  @JoinTable({ name: 'alerts_aleas' })
+  aleas: Alea[];
+  @Column({ type: 'json', nullable: true })
   criterias: JSON;
   @OneToMany(() => ReportType, (reportType) => reportType.id)
   @JoinColumn({ name: 'reportTypes' })

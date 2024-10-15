@@ -13,6 +13,8 @@ export class Alea {
   id: number;
   @Column()
   name: string;
+  @Column()
+  label: string;
   @ManyToOne((type) => Category, (category) => category.id)
   @JoinColumn({ name: 'category' })
   category: Category;

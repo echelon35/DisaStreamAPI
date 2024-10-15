@@ -16,16 +16,10 @@ export class MailAlertService {
       mail: mail,
       userId: userId,
     };
-    const isExist = await this.mailAlertRepository.existsBy({ mail: mail });
-    if (!isExist) {
-      const createdMail = await this.mailAlertRepository.insert(mailUser);
-      if (createdMail !== null) {
-        await this.AddMailAlertToSES(mail);
-      }
 
-      return createdMail.raw.length > 0;
-    } else {
-      return false;
+    const createdMail = await this.mailAlertRepository.insert(mailUser);
+    if (createdMail !== null) {
+      await this.AddMailAlertToSES(mail);
     }
   }
 
@@ -45,5 +39,10 @@ export class MailAlertService {
         error,
       );
     }
+  }
+
+  async getMailAdressesOfUser(id: number): Promise<MailAlert[]> {
+    const mailAlerts = await this.mailAlertRepository.findBy({ userId: id });
+    return mailAlerts;
   }
 }

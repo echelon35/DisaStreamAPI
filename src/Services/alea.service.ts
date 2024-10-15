@@ -14,7 +14,7 @@ export class AleaService {
     const aleas = await this.aleaRepository
       .createQueryBuilder('alea')
       .leftJoinAndSelect('alea.category', 'category')
-      .select(['alea.name', 'category.name'])
+      .select(['alea.name', 'alea.id', 'alea.label', 'category.name'])
       // .groupBy('category')
       .execute();
 

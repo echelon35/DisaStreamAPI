@@ -11,10 +11,9 @@ import { User } from './user.model';
 export class MailAlert {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column()
+  @Column({ unique: true })
   mail: string;
   @ManyToOne(() => User, (user) => user.id)
-  @JoinColumn({ name: 'user' })
   user: User;
   @Column()
   userId: number;
