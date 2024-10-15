@@ -12,7 +12,7 @@ import { UserModule } from './user.module';
     UserModule,
     JwtModule.register({
       global: true,
-      secret: 'disaster-secret-key',
+      secret: process.env.DISASTREAM_SECRET,
       signOptions: { expiresIn: 604800 },
     }),
   ],
