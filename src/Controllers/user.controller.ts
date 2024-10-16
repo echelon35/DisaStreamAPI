@@ -19,11 +19,11 @@ export class UserController {
     return users;
   }
 
-  @Get('user/avatar')
+  @Get('user/summary')
   async getAvatar(@Request() req, @Response() res): Promise<string> {
     const userId = req.user?.user?.id;
     try {
-      const path = await this.userService.getAvatarPath(userId);
+      const path = await this.userService.getSummaryInfos(userId);
       return res.status(HttpStatus.OK).json(path);
     } catch (e) {
       return res

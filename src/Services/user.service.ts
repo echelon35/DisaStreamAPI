@@ -14,11 +14,12 @@ export class UserService {
     return await this.userRepository.find();
   }
 
-  async getAvatarPath(userId: number): Promise<string> {
+  async getSummaryInfos(userId: number): Promise<User> {
     const user = await this.userRepository.findOne({
       where: { id: userId },
+      select: { avatar: true, firstname: true, lastname: true },
     });
-    return user?.avatar;
+    return user;
   }
 
   async findOne(mail: string): Promise<User> {
@@ -35,6 +36,7 @@ export class UserService {
         firstname: true,
         lastname: true,
         last_connexion: true,
+        avatar: true,
       },
     });
   }
