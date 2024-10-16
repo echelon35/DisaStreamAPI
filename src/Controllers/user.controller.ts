@@ -1,4 +1,11 @@
-import { Controller, Get, NotFoundException, Request } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpStatus,
+  NotFoundException,
+  Request,
+  Response,
+} from '@nestjs/common';
 import { UserDto } from '../DTO/user.dto';
 import { UserService } from '../Services/user.service';
 
@@ -10,6 +17,21 @@ export class UserController {
   async findAll(): Promise<UserDto[]> {
     const users = await this.userService.findAll();
     return users;
+  }
+
+  @Get('user/avatar')
+  async getAvatar(@Request() req, @Response() res): Promise<string> {
+    const userId = req.user?.user?.id;
+    try {
+      const path = await this.userService.getAvatarPath(userId);
+      return res.status(HttpStatus.OK).json(path);
+    } catch (e) {
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json(
+          "Une erreur est survenue lors de la récupération de l'avatar : " + e,
+        );
+    }
   }
 
   @Get('profile')

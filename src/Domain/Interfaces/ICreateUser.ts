@@ -3,4 +3,5 @@ export interface ICreateUser {
   firstname?: string;
   lastname?: string;
   username: string;
+  avatar: string;
 }

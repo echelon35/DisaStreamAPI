@@ -6,6 +6,8 @@ import { AuthController } from '../Controllers/auth.controller';
 import { LocalStrategy } from '../Strategy/local.strategy';
 import { JwtStrategy } from '../Strategy/jwt.strategy';
 import { UserModule } from './user.module';
+import { DownloadService } from 'src/Services/download.service';
+import { S3Service } from 'src/Services/s3.service';
 
 @Module({
   imports: [
@@ -17,6 +19,13 @@ import { UserModule } from './user.module';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy, GoogleStrategy],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    JwtStrategy,
+    GoogleStrategy,
+    DownloadService,
+    S3Service,
+  ],
 })
 export class AuthModule {}

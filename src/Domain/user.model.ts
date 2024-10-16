@@ -20,4 +20,6 @@ export class User {
   provider: string;
   @Column()
   providerId: string;
+  @Column({ nullable: true })
+  avatar: string;
 }

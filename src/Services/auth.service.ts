@@ -4,12 +4,16 @@ import { compareSync } from 'bcrypt';
 import { UserDto } from '../DTO/user.dto';
 import { IGoogleLogin } from '../Domain/Interfaces/IGoogleLogin.interface';
 import { UserService } from './user.service';
+import { DownloadService } from './download.service';
+import { S3Service } from './s3.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
+    private downloadService: DownloadService,
+    private S3Service: S3Service,
   ) {}
 
   /**
@@ -45,7 +49,7 @@ export class AuthService {
    * @returns boolean isLogOut
    */
   async logout(id: number): Promise<boolean> {
-    const user = await this.userService.findOneByPk(id, 'login');
+    const user = await this.userService.findOneByPk(id);
     return await this.userService.logout(user);
   }
 
@@ -55,12 +59,28 @@ export class AuthService {
    * @returns token with user
    */
   async googleLogin(googleLogin: IGoogleLogin): Promise<any> {
-    //First try to find him with his mail
-    const user = await this.userService.findOrCreate(
-      googleLogin?.email,
-      googleLogin,
-    );
+    //First try to find him
+    const user = await this.userService.updateOrCreate(googleLogin);
 
+    console.log(googleLogin);
+
+    //Save avatar if empty
+    if (user.avatar === null && googleLogin.avatar !== undefined) {
+      const imageBuffer = await this.downloadService.downloadImage(
+        googleLogin.avatar,
+      );
+
+      const s3AvatarUrl = await this.S3Service.UploadToS3(
+        imageBuffer,
+        `google-avatar-${user.id}.jpg`,
+      );
+
+      user.avatar = s3AvatarUrl;
+
+      await this.userService.updateOrCreate(googleLogin);
+    }
+
+    //Give token
     return {
       access_token: this.jwtService.sign({ user }),
     };

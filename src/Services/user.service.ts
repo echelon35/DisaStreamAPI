@@ -14,6 +14,13 @@ export class UserService {
     return await this.userRepository.find();
   }
 
+  async getAvatarPath(userId: number): Promise<string> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+    return user?.avatar;
+  }
+
   async findOne(mail: string): Promise<User> {
     return await this.userRepository.findOne({
       where: { mail: `${mail}` },
@@ -21,10 +28,18 @@ export class UserService {
   }
 
   async findMe(id: number): Promise<User> {
-    return await this.userRepository.findOneBy({ id: id });
+    return await this.userRepository.findOne({
+      where: { id: id },
+      select: {
+        mail: true,
+        firstname: true,
+        lastname: true,
+        last_connexion: true,
+      },
+    });
   }
 
-  async findOneByPk(id: number, scope: string = ''): Promise<User> {
+  async findOneByPk(id: number): Promise<User> {
     // if (scope != '') {
     //   return await this.userModel.scope(scope).findByPk(id, { raw: true });
     // } else {
@@ -38,7 +53,7 @@ export class UserService {
     return updatedUser.affected > 0;
   }
 
-  async findOrCreate(mail: string, user: ICreateUser): Promise<User> {
+  async updateOrCreate(user: ICreateUser): Promise<User> {
     const created = await this.userRepository.upsert(user, {
       skipUpdateIfNoValuesChanged: true,
       conflictPaths: ['mail'],

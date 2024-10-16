@@ -15,6 +15,12 @@ export class AlertService {
   }
 
   async getUserAlerts(userId: number) {
-    return await this.alertRepository.findBy({ userId: userId });
+    const alerts = await this.alertRepository
+      .createQueryBuilder('alert')
+      .leftJoinAndSelect('alert.aleas', 'alea')
+      .where({ userId: userId })
+      .getMany();
+
+    return alerts;
   }
 }
