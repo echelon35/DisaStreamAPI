@@ -55,7 +55,7 @@ export class AuthController {
     const token = await this.authService.googleLogin(req.user);
     if (token) {
       return res.redirect(
-        `${process.env.DISASTREAM_FRONT_BASE_URI}/dashboard?access_token=${token.access_token}`,
+        `${process.env.DISASTREAM_FRONT_BASE_URI}?access_token=${token.access_token}`,
       );
     } else {
       throw new ForbiddenException();

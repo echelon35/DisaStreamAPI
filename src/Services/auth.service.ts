@@ -62,8 +62,6 @@ export class AuthService {
     //First try to find him
     const user = await this.userService.updateOrCreate(googleLogin);
 
-    console.log(googleLogin);
-
     //Save avatar if empty
     if (user.avatar === null && googleLogin.avatar !== undefined) {
       const imageBuffer = await this.downloadService.downloadImage(
