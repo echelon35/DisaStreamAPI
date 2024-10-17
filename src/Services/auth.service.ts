@@ -62,7 +62,7 @@ export class AuthService {
     googleLogin.last_connexion = new Date();
     const user = await this.userService.updateOrCreate(googleLogin);
 
-    console.log(user);
+    // console.log(user);
 
     //Save avatar if empty
     if (user.avatar === null && googleLogin.avatar !== undefined) {

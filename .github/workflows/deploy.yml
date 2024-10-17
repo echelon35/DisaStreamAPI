@@ -1,0 +1,84 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches:
+      - main  #Push on main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up SSH agent
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Add server to known_hosts
+      run: |
+        ssh-keyscan -H ${{ secrets.SERVER_URL }} >> ~/.ssh/known_hosts
+
+    - name: Stop disastreamapi if running
+      run: |
+        ssh root@${{ secrets.SERVER_URL }} "pm2 stop disastreamapi || true"
+
+    - name: Delete disastreamapi directory if already exists on EC2
+      run: |
+        ssh root@${{ secrets.SERVER_URL }} "rm -r /opt/disastreamapi || true"
+
+    - name: Ensure disastreamapi directory exists on EC2
+      run: |
+        ssh root@${{ secrets.SERVER_URL }} "mkdir -p /opt/disastreamapi"
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'  # Node.js version needed by the project
+
+    - name: Add SSH key
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Create env file
+      run: |
+          touch .env
+          echo AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} >> .env
+          echo AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} >> .env
+          echo AWS_PASSWORD=${{ secrets.AWS_PASSWORD }} >> .env
+          echo AWS_REGION=${{ secrets.AWS_REGION }} >> .env
+          echo AWS_QUEUE=${{ secrets.AWS_QUEUE }} >> .env
+          echo AWS_TOPIC=${{ secrets.AWS_TOPIC }} >> .env
+          echo DISASTREAM_DB_HOST=${{ secrets.DISASTREAM_DB_HOST }} >> .env
+          echo DISASTREAM_DB_PORT=${{ secrets.DISASTREAM_DB_PORT }} >> .env
+          echo DISASTREAM_DB_NAME=${{ secrets.DISASTREAM_DB_NAME }}  >> .env
+          echo DISASTREAM_DB_USER=${{ secrets.DISASTREAM_DB_USER }} >> .env
+          echo DISASTREAM_DB_PASSWORD=${{ secrets.DISASTREAM_DB_PASSWORD }} >> .env
+          echo DISASTREAM_PORT=${{ secrets.DISASTREAM_PORT }} >> .env
+          echo DISASTREAM_SECRET=${{ secrets.DISASTREAM_SECRET }} >> .env
+          echo GOOGLE_API=${{ secrets.GOOGLE_API }} >> .env
+          echo GOOGLE_API_SECRET=${{ secrets.GOOGLE_API_SECRET }} >> .env
+          echo DISASTREAM_MAIL=${{ secrets.DISASTREAM_MAIL }} >> .env
+          cat .env
+
+    - name: Copy all project to EC2 instance
+      run: |
+        scp -r * .env root@${{ secrets.SERVER_URL }}:/opt/disastreamapi/
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Install packages on server
+      run: |
+        ssh root@${{ secrets.SERVER_URL }} "cd /opt/disastreamapi && sudo npm install"
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Restart NestJs API with PM2
+      run: |
+        ssh root@${{ secrets.SERVER_URL }} "cd /opt/disastreamapi && sudo pm2 restart disastreamapi || sudo pm2 start \"npm run start\" --name disastreamapi"
+

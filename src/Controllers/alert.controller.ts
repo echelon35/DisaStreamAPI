@@ -44,7 +44,7 @@ export class AlertController {
       userId: userId,
     };
 
-    console.log(alert);
+    // console.log(alert);
     await this.alertService.CreateAlert(alert);
     res
       .status(HttpStatus.OK)
@@ -60,7 +60,7 @@ export class AlertController {
   @Public()
   @Post('/testalert')
   async TestAlerts(@Body() body: DisasterDataFromSQS) {
-    console.log(body);
+    // console.log(body);
     return await this.alerterService.sendRealTimeAlert(body);
   }
 

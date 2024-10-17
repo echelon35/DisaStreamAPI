@@ -31,7 +31,7 @@ export class MailAlertService {
         EmailAddress: emailAddress,
       });
       const response = await sesClient.send(command);
-      console.log(`Vérification de l'email envoyée à : ${emailAddress}`);
+      // console.log(`Vérification de l'email envoyée à : ${emailAddress}`);
       return response;
     } catch (error) {
       console.error(

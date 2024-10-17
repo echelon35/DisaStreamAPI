@@ -94,9 +94,9 @@ export class AlerterService {
 
       const htmlContent = mustache.render(template, templateData);
 
-      console.log(alert.mailAlerts);
+      // console.log(alert.mailAlerts);
       alert.mailAlerts.forEach(async (mailAlert) => {
-        console.log(mailAlert.mail);
+        // console.log(mailAlert.mail);
         await this.emailerService.sendEmail(
           mailAlert.mail,
           subjectMail,

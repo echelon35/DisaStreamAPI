@@ -45,7 +45,7 @@ export class QueueListenerService {
               });
           }
         } else {
-          console.log('Aucun message dans la queue');
+          // console.log('Aucun message dans la queue');
         }
       }
     } catch (error) {
