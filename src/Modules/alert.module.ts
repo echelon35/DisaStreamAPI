@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, OnModuleInit } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AlertController } from 'src/Controllers/alert.controller';
 import { ReportsController } from 'src/Controllers/reports.controller';
@@ -9,14 +9,22 @@ import { MailAlert } from 'src/Domain/mailAlert.model';
 import { ReportType } from 'src/Domain/reportType.model';
 import { User } from 'src/Domain/user.model';
 import { AlertService } from 'src/Services/alert.service';
+import { AlerterService } from 'src/Services/alerter.service';
+import { CloudWatchService } from 'src/Services/cloudwatch.service';
+import { EmailerService } from 'src/Services/emailer.service';
 import { MailAlertService } from 'src/Services/mailAlert.service';
+import { QueueListenerService } from 'src/Services/queue_listener.service';
 import { ReportService } from 'src/Services/report.service';
 import { Repository } from 'typeorm';
 
 @Module({
   providers: [
-    AlertService,
+    CloudWatchService,
+    EmailerService,
     Repository<Alert>,
+    AlertService,
+    AlerterService,
+    QueueListenerService,
     Repository<MailAlert>,
     Repository<ReportType>,
     ReportService,
@@ -33,5 +41,12 @@ import { Repository } from 'typeorm';
     ]),
   ],
   controllers: [AlertController, ReportsController],
+  exports: [MailAlertService],
 })
-export class AlertModule {}
+export class AlertModule implements OnModuleInit {
+  constructor(private readonly sqsListenerService: QueueListenerService) {}
+  onModuleInit() {
+    // Listen to my SQS queue for real-time notifications
+    this.sqsListenerService.pollMessagesFromSQS();
+  }
+}

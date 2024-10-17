@@ -3,11 +3,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ICreateUser } from 'src/Domain/Interfaces/ICreateUser';
 import { User } from 'src/Domain/user.model';
 import { Repository } from 'typeorm';
+import { MailAlertService } from './mailAlert.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
+    private mailAlertService: MailAlertService,
   ) {}
 
   async findAll(): Promise<User[]> {
@@ -56,14 +58,26 @@ export class UserService {
   }
 
   async updateOrCreate(user: ICreateUser): Promise<User> {
-    const created = await this.userRepository.upsert(user, {
+    await this.userRepository.upsert(user, {
       skipUpdateIfNoValuesChanged: true,
       conflictPaths: ['mail'],
     });
 
     const userCreated = await this.userRepository.findOneBy({
-      id: created.raw[0]?.id,
+      mail: user.mail,
     });
+
+    //Be sure User has always at least a mail alert with its own mail
+    const mailAdresses = await this.mailAlertService.getMailAdressesOfUser(
+      userCreated.id,
+    );
+    if (mailAdresses.length == 0) {
+      await this.mailAlertService.CreateMailAlert(
+        userCreated.id,
+        userCreated.mail,
+      );
+    }
+
     return userCreated;
   }
 }

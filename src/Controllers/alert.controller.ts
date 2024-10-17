@@ -1,14 +1,19 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpStatus,
+  Param,
   Post,
   Request,
   Response,
 } from '@nestjs/common';
+import { Public } from 'src/Common/Decorators/public.decorator';
 import { CreateAlertDto } from 'src/DTO/createAlert.dto';
+import { DisasterDataFromSQS } from 'src/DTO/disasterDataFromSQS';
 import { AlertService } from 'src/Services/alert.service';
+import { AlerterService } from 'src/Services/alerter.service';
 import { MailAlertService } from 'src/Services/mailAlert.service';
 
 export class CreateMailAlertDto {
@@ -19,6 +24,7 @@ export class CreateMailAlertDto {
 export class AlertController {
   constructor(
     private readonly alertService: AlertService,
+    private readonly alerterService: AlerterService,
     private readonly mailAlertService: MailAlertService,
   ) {}
 
@@ -34,8 +40,11 @@ export class AlertController {
       name: alertDto.name,
       areas: alertDto.areas,
       aleas: alertDto.aleas,
+      mailAlerts: alertDto.mailAlerts,
       userId: userId,
     };
+
+    console.log(alert);
     await this.alertService.CreateAlert(alert);
     res
       .status(HttpStatus.OK)
@@ -46,6 +55,27 @@ export class AlertController {
   async getUserAlerts(@Request() req) {
     const userId = req?.user?.user?.id;
     return await this.alertService.getUserAlerts(userId);
+  }
+
+  @Public()
+  @Post('/testalert')
+  async TestAlerts(@Body() body: DisasterDataFromSQS) {
+    console.log(body);
+    return await this.alerterService.sendRealTimeAlert(body);
+  }
+
+  @Delete('/delete/:id')
+  async deleteAlert(@Param('id') id: number, @Request() req, @Response() res) {
+    const userId = req?.user?.user?.id;
+    const deleteId = id;
+    const deletion = await this.alertService.deleteAlert(userId, deleteId);
+    if (deletion) {
+      res.status(HttpStatus.OK).json("L'alerte a bien été supprimée");
+    } else {
+      res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json("L'alerte n'a pas été supprimée");
+    }
   }
 
   @Post('/mail/create')

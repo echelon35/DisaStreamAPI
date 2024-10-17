@@ -1,5 +1,5 @@
 export interface IGoogleLogin {
-  email: string;
+  mail: string;
   firstname: string;
   lastname: string;
   username: string;
@@ -7,4 +7,5 @@ export interface IGoogleLogin {
   providerId: string;
   avatar: string;
   provider: 'GOOGLE';
+  last_connexion: Date;
 }

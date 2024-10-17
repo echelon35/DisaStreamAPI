@@ -46,21 +46,11 @@ import { MailAlert } from './Domain/mailAlert.model';
   controllers: [AppController],
   providers: [
     AppService,
-    AlerterService,
     CloudWatchService,
-    QueueListenerService, //Here I make all my routes controlled by the authguard (token is required)
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
-    EmailerService,
   ],
 })
-export class AppModule implements OnModuleInit {
-  constructor(private readonly sqsListenerService: QueueListenerService) {}
-
-  onModuleInit() {
-    // Listen to my SQS queue for real-time notifications
-    this.sqsListenerService.pollMessagesFromSQS();
-  }
-}
+export class AppModule {}

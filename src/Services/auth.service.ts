@@ -59,8 +59,10 @@ export class AuthService {
    * @returns token with user
    */
   async googleLogin(googleLogin: IGoogleLogin): Promise<any> {
-    //First try to find him
+    googleLogin.last_connexion = new Date();
     const user = await this.userService.updateOrCreate(googleLogin);
+
+    console.log(user);
 
     //Save avatar if empty
     if (user.avatar === null && googleLogin.avatar !== undefined) {
@@ -77,6 +79,8 @@ export class AuthService {
 
       await this.userService.updateOrCreate(googleLogin);
     }
+
+    //Save mail alert if null
 
     //Give token
     return {

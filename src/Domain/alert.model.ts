@@ -15,6 +15,7 @@ import { User } from './user.model';
 import { Alea } from './alea.model';
 import { ReportType } from './reportType.model';
 import { Geometry } from 'geojson';
+import { MailAlert } from './mailAlert.model';
 
 @Index(['name', 'userId'], { unique: true })
 @Entity({ name: 'alerts' })
@@ -37,6 +38,9 @@ export class Alert {
   @OneToMany(() => ReportType, (reportType) => reportType.id)
   @JoinColumn({ name: 'reportTypes' })
   reportTypes: ReportType;
+  @ManyToMany(() => MailAlert)
+  @JoinTable({ name: 'alerts_mails' })
+  mailAlerts: MailAlert[];
   @CreateDateColumn({
     type: 'timestamp without time zone',
     nullable: true,

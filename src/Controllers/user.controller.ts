@@ -37,7 +37,7 @@ export class UserController {
   @Get('profile')
   async findMe(@Request() req): Promise<UserDto> {
     if (req.user != null) {
-      const me = await this.userService.findMe(req?.user?.id);
+      const me = await this.userService.findMe(req?.user?.user?.id);
       return me;
     } else {
       throw new NotFoundException();
