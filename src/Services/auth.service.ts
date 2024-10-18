@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { compareSync } from 'bcrypt';
 import { UserDto } from '../DTO/user.dto';
 import { IGoogleLogin } from '../Domain/Interfaces/IGoogleLogin.interface';
 import { UserService } from './user.service';
 import { DownloadService } from './download.service';
 import { S3Service } from './s3.service';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class AuthService {
@@ -35,7 +35,7 @@ export class AuthService {
    */
   async validateUser(mail: string, pass: string): Promise<any> {
     const user = await this.userService.findOne(mail);
-    if (user && compareSync(pass, user.password)) {
+    if (user && bcrypt.compareSync(pass, user.password)) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...result } = user;
       return result;
