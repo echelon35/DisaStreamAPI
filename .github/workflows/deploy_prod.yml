@@ -23,7 +23,7 @@ jobs:
     - name: Log in to GitHub Docker Registry
       run: echo "${{ secrets.GDR_TOKEN }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
 
-    # 4. Build the Docker image (optional if you're not pushing to the registry)
+    # 4. Build the Docker image
     - name: Build Docker image
       run: docker build -t ghcr.io/${{ github.repository_owner }}/disastreamapi:latest .
 
