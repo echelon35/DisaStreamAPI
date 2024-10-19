@@ -36,10 +36,12 @@ jobs:
       uses: appleboy/ssh-action@v0.1.8
       with:
         host: ${{ secrets.SERVER_URL }}
-        username: ubuntu
+        username: root
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 22
+        timeout: 600s
         script: |
           cd /opt/disastreamapi
-          docker-compose pull
-          docker-compose up -d
+          echo "${{ secrets.GDR_TOKEN }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+          docker pull ghcr.io/${{ github.repository_owner }}/disastreamapi:latest
+          docker compose up -d
