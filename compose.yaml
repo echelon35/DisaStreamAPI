@@ -9,8 +9,8 @@
 # https://github.com/docker/awesome-compose
 services:
   server:
-    build:
-      context: .
+    container_name: disastream_api
+    image: ghcr.io/echelon35/disastreamapi:latest
     env_file:
       - ./.env.prod
     environment:
