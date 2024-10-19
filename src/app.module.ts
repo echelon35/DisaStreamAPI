@@ -1,8 +1,6 @@
-import { Module, OnModuleInit } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AlerterService } from './Services/alerter.service';
-import { QueueListenerService } from './Services/queue_listener.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './Domain/user.model';
@@ -11,7 +9,6 @@ import { JwtAuthGuard } from './Guards/jwt-auth.guard';
 import { AuthModule } from './Modules/auth.module';
 import { UserModule } from './Modules/user.module';
 import { CloudWatchService } from './Services/cloudwatch.service';
-import { EmailerService } from './Services/emailer.service';
 import { Alea } from './Domain/alea.model';
 import { Category } from './Domain/category.model';
 import { AleaModule } from './Modules/alea.module';
