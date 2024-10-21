@@ -1,6 +1,7 @@
 import { Module, OnModuleInit } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AlertController } from 'src/Controllers/alert.controller';
+import { AlertHistoryController } from 'src/Controllers/alertHistory.controller';
 import { ReportsController } from 'src/Controllers/reports.controller';
 import { Alea } from 'src/Domain/alea.model';
 import { Alert } from 'src/Domain/alert.model';
@@ -44,7 +45,7 @@ import { Repository } from 'typeorm';
       AlertHistory,
     ]),
   ],
-  controllers: [AlertController, ReportsController],
+  controllers: [AlertController, ReportsController, AlertHistoryController],
   exports: [MailAlertService],
 })
 export class AlertModule implements OnModuleInit {
