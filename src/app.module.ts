@@ -16,6 +16,7 @@ import { AlertModule } from './Modules/alert.module';
 import { Alert } from './Domain/alert.model';
 import { ReportType } from './Domain/reportType.model';
 import { MailAlert } from './Domain/mailAlert.model';
+import { AlertHistory } from './Domain/alertHistory.model';
 
 @Module({
   imports: [
@@ -30,7 +31,15 @@ import { MailAlert } from './Domain/mailAlert.model';
       username: process.env.DISASTREAM_DB_USER,
       password: process.env.DISASTREAM_DB_PASSWORD,
       database: process.env.DISASTREAM_DB_NAME,
-      entities: [User, Alea, Category, Alert, ReportType, MailAlert],
+      entities: [
+        User,
+        Alea,
+        Category,
+        Alert,
+        ReportType,
+        MailAlert,
+        AlertHistory,
+      ],
       synchronize: true,
       schema: 'public',
       logging: 'all',

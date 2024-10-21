@@ -6,6 +6,8 @@ import * as mustache from 'mustache';
 import * as path from 'path';
 import { AlertService } from './alert.service';
 import { Alert } from 'src/Domain/alert.model';
+import { AlertHistoryService } from './alertHistory.service';
+import { CreateHistoryDto } from 'src/DTO/createHistory.dto';
 
 /**
  * Service to send alerts to users
@@ -15,6 +17,7 @@ export class AlerterService {
   constructor(
     private emailerService: EmailerService,
     private alertService: AlertService,
+    private alertHistoryService: AlertHistoryService,
   ) {}
 
   async sendRealTimeAlert(disasterData: DisasterDataFromSQS) {
@@ -94,15 +97,22 @@ export class AlerterService {
 
       const htmlContent = mustache.render(template, templateData);
 
-      // console.log(alert.mailAlerts);
       alert.mailAlerts.forEach(async (mailAlert) => {
-        // console.log(mailAlert.mail);
         await this.emailerService.sendEmail(
           mailAlert.mail,
           subjectMail,
           htmlContent,
         );
       });
+
+      console.log("Création d'un enregistrement en base pour l'alerte envoyée");
+
+      const record: CreateHistoryDto = {
+        alert: alert,
+        notification: templateData,
+        disasterDataFromSQS: disasterData,
+      };
+      await this.alertHistoryService.create(record);
     });
   }
 }

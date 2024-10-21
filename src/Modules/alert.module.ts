@@ -4,11 +4,13 @@ import { AlertController } from 'src/Controllers/alert.controller';
 import { ReportsController } from 'src/Controllers/reports.controller';
 import { Alea } from 'src/Domain/alea.model';
 import { Alert } from 'src/Domain/alert.model';
+import { AlertHistory } from 'src/Domain/alertHistory.model';
 import { Category } from 'src/Domain/category.model';
 import { MailAlert } from 'src/Domain/mailAlert.model';
 import { ReportType } from 'src/Domain/reportType.model';
 import { User } from 'src/Domain/user.model';
 import { AlertService } from 'src/Services/alert.service';
+import { AlertHistoryService } from 'src/Services/alertHistory.service';
 import { AlerterService } from 'src/Services/alerter.service';
 import { CloudWatchService } from 'src/Services/cloudwatch.service';
 import { EmailerService } from 'src/Services/emailer.service';
@@ -23,6 +25,7 @@ import { Repository } from 'typeorm';
     EmailerService,
     Repository<Alert>,
     AlertService,
+    AlertHistoryService,
     AlerterService,
     QueueListenerService,
     Repository<MailAlert>,
@@ -38,6 +41,7 @@ import { Repository } from 'typeorm';
       User,
       Category,
       MailAlert,
+      AlertHistory,
     ]),
   ],
   controllers: [AlertController, ReportsController],

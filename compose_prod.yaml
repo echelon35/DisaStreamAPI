@@ -1,12 +1,10 @@
-# Build from code
+# Build from github package
 services:
   server:
     container_name: disastream_api
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/echelon35/disastreamapi:latest
     env_file:
-      - ./.env
+      - ./.env.prod
     environment:
       NODE_ENV: production
     ports:
