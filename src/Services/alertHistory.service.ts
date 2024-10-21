@@ -22,7 +22,7 @@ export class AlertHistoryService {
 		    RIGHT JOIN (SELECT CURRENT_DATE - sequential_dates.date AS date
         FROM generate_series(0, 7) AS sequential_dates(date)) sequential_dates
 			  ON "td"."createdAt"::date = sequential_dates.date
-			  GROUP BY sequential_dates.date`);
+			  GROUP BY sequential_dates.date ORDER BY sequential_dates.date DESC`);
 
     return alertHistories;
   }
