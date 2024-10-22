@@ -37,7 +37,7 @@ export class AlerterService {
         case 'flood':
           templateData = {
             background:
-              'https://disastream.s3.eu-west-3.amazonaws.com/background/inondation.jpg',
+              'https://disastream.s3.eu-west-3.amazonaws.com/background/flood.jpg',
             title: 'INONDATION DETECTEE',
             subtitle: `Votre alerte ${alert.name} a detecté une inondation`,
             linkSource: disasterData?.disaster?.lien_source,
@@ -51,7 +51,7 @@ export class AlerterService {
         case 'earthquake':
           templateData = {
             background:
-              'https://disastream.s3.eu-west-3.amazonaws.com/background/seisme.jpg',
+              'https://disastream.s3.eu-west-3.amazonaws.com/background/earthquake.jpg',
             title: 'SEISME DETECTE',
             subtitle: `Votre alerte ${alert.name} a detecté un séisme`,
             linkSource: disasterData?.disaster?.lien_source,
@@ -65,7 +65,7 @@ export class AlerterService {
         case 'hurricane':
           templateData = {
             background:
-              'https://disastream.s3.eu-west-3.amazonaws.com/background/cyclone.jpg',
+              'https://disastream.s3.eu-west-3.amazonaws.com/background/hurricane.jpg',
             title: 'CYCLONE DETECTE',
             subtitle: `Votre alerte ${alert.name} a detecté un cyclone`,
             linkSource: disasterData?.disaster?.lien_source,
@@ -79,7 +79,7 @@ export class AlerterService {
         case 'eruption':
           templateData = {
             background:
-              'https://disastream.s3.eu-west-3.amazonaws.com/background/cyclone.jpg',
+              'https://disastream.s3.eu-west-3.amazonaws.com/background/eruption.jpg',
             title: 'ERUPTION VOLCANIQUE DETECTEE',
             subtitle: `Votre alerte ${alert.name} a detecté une éruption volcanique`,
             linkSource: disasterData?.disaster?.lien_source,

@@ -15,6 +15,18 @@ export class AlertService {
     await this.alertRepository.save(alert);
   }
 
+  async getAlert(id: number, userId: number): Promise<Alert | null> {
+    const result = await this.alertRepository
+      .createQueryBuilder('alert')
+      .leftJoinAndSelect('alert.aleas', 'alea')
+      .where({ userId: userId, id: id })
+      .getOne();
+
+    console.log(result);
+
+    return result;
+  }
+
   async deleteAlert(userId: number, deleteId: number): Promise<boolean> {
     const result = await this.alertRepository.delete({
       id: deleteId,
@@ -40,7 +52,7 @@ export class AlertService {
       .leftJoinAndSelect('alert.aleas', 'aleas')
       .leftJoinAndSelect('alert.mailAlerts', 'mailAlerts')
       .where(
-        'ST_Contains(alert.areas,ST_GeomFromGeoJSON(:point)) AND :type IN (aleas.name)',
+        '(ST_Contains(alert.areas,ST_GeomFromGeoJSON(:point)) AND :type IN (aleas.name)) OR alert.areas = null',
         {
           point: disasterData.disaster.point,
           type: disasterData.disaster_type,

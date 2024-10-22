@@ -8,10 +8,9 @@ import {
   Post,
   Request,
   Response,
+  UnauthorizedException,
 } from '@nestjs/common';
-import { Public } from 'src/Common/Decorators/public.decorator';
 import { CreateAlertDto } from 'src/DTO/createAlert.dto';
-import { DisasterDataFromSQS } from 'src/DTO/disasterDataFromSQS';
 import { AlertService } from 'src/Services/alert.service';
 import { AlerterService } from 'src/Services/alerter.service';
 import { MailAlertService } from 'src/Services/mailAlert.service';
@@ -57,13 +56,6 @@ export class AlertController {
     return await this.alertService.getUserAlerts(userId);
   }
 
-  @Public()
-  @Post('/testalert')
-  async TestAlerts(@Body() body: DisasterDataFromSQS) {
-    // console.log(body);
-    return await this.alerterService.sendRealTimeAlert(body);
-  }
-
   @Delete('/delete/:id')
   async deleteAlert(@Param('id') id: number, @Request() req, @Response() res) {
     const userId = req?.user?.user?.id;
@@ -107,5 +99,16 @@ export class AlertController {
     const mailAlerts =
       await this.mailAlertService.getMailAdressesOfUser(userId);
     res.status(HttpStatus.OK).json(mailAlerts);
+  }
+
+  @Get('/:id')
+  async getUserAlert(@Request() req, @Param('id') id: number, @Response() res) {
+    const userId = req?.user?.user?.id;
+    const alert = await this.alertService.getAlert(id, userId);
+    if (alert == null) {
+      throw new UnauthorizedException();
+    } else {
+      return res.send(alert);
+    }
   }
 }

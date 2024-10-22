@@ -12,7 +12,17 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   async validate(mail: string, password: string): Promise<any> {
     const user = await this.authService.validateUser(mail, password);
     if (!user) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException(
+        'Adresse mail ou mot de passe incorrect',
+        {
+          cause: new Error(),
+          description: 'Adresse mail ou mot de passe incorrect',
+        },
+      );
+    } else if (user?.provider == 'GOOGLE') {
+      throw new UnauthorizedException(
+        'Un compte Google existe à cette adresse, veuillez-vous connecter via le bouton Google',
+      );
     }
     return user;
   }
