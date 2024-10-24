@@ -31,7 +31,7 @@ export class EmailerService {
       await this.transporter.sendMail(mailOptions);
       // console.log('Email envoyé avec succès');
     } catch (error) {
-      // console.error("Erreur lors de l'envoi de l'email :", error);
+      console.error("Erreur lors de l'envoi de l'email :", error);
       throw new Error('Email not sent');
     }
   }

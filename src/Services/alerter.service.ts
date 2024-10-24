@@ -45,6 +45,10 @@ export class AlerterService {
       disasterData.type == InsertType.CREATION ? 'a detecté' : 'a mis à jour';
 
     alertsToSend.forEach(async (alert: Alert) => {
+      const myAlerts = 'https://disastream.com/dashboard/alerts/manage';
+      const modifyAlerts =
+        'https://disastream.com/dashboard/alerts/' + alert.id;
+
       switch (disasterData.disaster_type) {
         case 'flood':
           templateData = {
@@ -57,6 +61,8 @@ export class AlerterService {
             disasterLocation: `L'inondation est localisée à ${Math.ceil(nearestCity.distance)}km de ${nearestCity.ville} (${nearestCity.pays})`,
             disasterSource: `L'inondation a été detectée par l'observatoire ${disasterData?.disaster?.source?.name}.`,
             disasterImpact: `L'impact n'est pas connu`,
+            myAlerts: `${myAlerts}`,
+            modifyAlerts: `${myAlerts}`,
           };
           subjectMail = `Votre alerte ${titleTypeUpdate} une inondation !`;
           break;
@@ -71,6 +77,8 @@ export class AlerterService {
             disasterLocation: `L'épicentre est localisé à ${Math.ceil(nearestCity.distance)}km de ${nearestCity.ville} (${nearestCity.pays})`,
             disasterSource: `Le séisme a été detecté par l'observatoire ${disasterData?.disaster?.source?.name}.`,
             disasterImpact: `L'impact n'est pas connu`,
+            myAlerts: `${myAlerts}`,
+            modifyAlerts: `${myAlerts}`,
           };
           subjectMail = `Votre alerte ${titleTypeUpdate} un séisme !`;
           break;
@@ -85,6 +93,8 @@ export class AlerterService {
             disasterLocation: `Le cyclone est actuellement situé à ${Math.ceil(nearestCity.distance)}km de ${nearestCity.ville} (${nearestCity.pays})`,
             disasterSource: `Le cyclone a été detecté par l'observatoire ${disasterData?.disaster?.source?.name}.`,
             disasterImpact: `L'impact n'est pas connu`,
+            myAlerts: `${myAlerts}`,
+            modifyAlerts: `${myAlerts}`,
           };
           subjectMail = `Votre alerte ${titleTypeUpdate} un cyclone !`;
           break;
@@ -93,12 +103,14 @@ export class AlerterService {
             background:
               'https://disastream.s3.eu-west-3.amazonaws.com/background/eruption.jpg',
             title: 'ERUPTION VOLCANIQUE DETECTEE',
-            subtitle: `Votre alerte ${alert.name} a detecté une éruption volcanique`,
+            subtitle: `Votre alerte ${alert.name} ${titleTypeUpdate} une éruption volcanique`,
             linkSource: disasterData?.disaster?.lien_source,
             disasterDate: `L'éruption a commencé à ${disasterData?.disaster?.premier_releve} selon la source mais fut enregistrée à ${disasterData?.disaster?.createdAt}.`,
             disasterLocation: `L'éruption est située à ${Math.ceil(nearestCity.distance)}km de ${nearestCity.ville} (${nearestCity.pays})`,
             disasterSource: `L'éruption a été detectée par l'observatoire ${disasterData?.disaster?.source?.name}.`,
             disasterImpact: `L'impact n'est pas connu`,
+            myAlerts: `${myAlerts}`,
+            modifyAlerts: `${myAlerts}`,
           };
           subjectMail = `Votre alerte ${titleTypeUpdate} une éruption volcanique !`;
           break;
