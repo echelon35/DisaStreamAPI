@@ -22,13 +22,11 @@ export class AlertService {
       .where({ userId: userId, id: id })
       .getOne();
 
-    console.log(result);
-
     return result;
   }
 
   async deleteAlert(userId: number, deleteId: number): Promise<boolean> {
-    const result = await this.alertRepository.delete({
+    const result = await this.alertRepository.softDelete({
       id: deleteId,
       userId: userId,
     });

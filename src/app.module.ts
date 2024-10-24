@@ -17,6 +17,8 @@ import { Alert } from './Domain/alert.model';
 import { ReportType } from './Domain/reportType.model';
 import { MailAlert } from './Domain/mailAlert.model';
 import { AlertHistory } from './Domain/alertHistory.model';
+import { City } from './Domain/city.model';
+import { Country } from './Domain/country.model';
 
 @Module({
   imports: [
@@ -42,6 +44,19 @@ import { AlertHistory } from './Domain/alertHistory.model';
       ],
       synchronize: true,
       schema: 'public',
+      logging: 'all',
+    }),
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      name: 'DisasterDb',
+      host: process.env.DISASTER_DB_HOST,
+      port: parseInt(process.env.DISASTER_DB_PORT),
+      username: process.env.DISASTER_DB_USER,
+      password: process.env.DISASTER_DB_PASSWORD,
+      database: process.env.DISASTER_DB_NAME,
+      entities: [City, Country],
+      schema: 'public',
+      synchronize: true,
       logging: 'all',
     }),
     UserModule,

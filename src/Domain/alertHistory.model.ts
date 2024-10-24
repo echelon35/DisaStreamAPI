@@ -1,6 +1,7 @@
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -33,4 +34,10 @@ export class AlertHistory {
     default: () => 'CURRENT_TIMESTAMP(6)',
   })
   updatedAt: Date;
+  @DeleteDateColumn({
+    type: 'timestamp without time zone',
+    nullable: true,
+    default: () => 'null',
+  })
+  deletedAt: Date;
 }
