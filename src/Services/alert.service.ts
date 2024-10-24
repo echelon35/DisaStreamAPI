@@ -52,7 +52,7 @@ export class AlertService {
       .leftJoinAndSelect('alert.aleas', 'aleas')
       .leftJoinAndSelect('alert.mailAlerts', 'mailAlerts')
       .where(
-        '(ST_Contains(alert.areas,ST_GeomFromGeoJSON(:point)) AND :type IN (aleas.name)) OR alert.areas = null',
+        '(ST_Contains(alert.areas,ST_GeomFromGeoJSON(:point)) OR alert.areas is null) AND :type IN (aleas.name)',
         {
           point: disasterData.disaster.point,
           type: disasterData.disaster_type,
